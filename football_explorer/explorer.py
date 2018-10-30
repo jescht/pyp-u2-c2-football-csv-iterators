@@ -8,7 +8,29 @@ class FootballExplorer(object):
         self.csv_file_name = csv_file_name
 
     def all(self):
-        raise NotImplementedError()
+        with open(self.csv_file_name) as fp:
+            reader = csv.reader(fp)
+            for line in reader:
+                player = Player(*line)
+                yield player
+                
+        
 
     def search(self, country=None, year=None, age=None, position=None):
-        raise NotImplementedError()
+
+        input_values = [country, year, age, position]
+        if not any (input_values):
+            raise ValueError() 
+        
+        # loops through Player object from all()
+        for player in self.all():
+            # player.date_of_birth = '(1991-09-09)9 September 1991 (aged 22)'
+            # slice notation from the end to get player.age = player.date_of_birth[-3:-1]
+            player.age = player.date_of_birth[-3:-1]
+            
+            if (not country or player.country == country) and (not year or player.year== year) and (not age or player.age == age) and (not position or player.position == position):                                            
+                yield player
+                
+      
+                
+
